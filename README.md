@@ -63,12 +63,20 @@ A feature-rich blog application built with Django, featuring user authentication
 
 ## Development
 
-Use the `setup.sh` script to set up templates and static files:
+Use the `setup.sh` script to set up templates and static files, its equivalent commands if in case setup.sh times out:
 
 ```
-./setup.sh
+source django/bin/activate
+pip install -r requirements.txt
+python manage.py makemigrations accounts
+python manage.py makemigrations blog
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py collectstatic --noinput
+python manage.py runserver
 ```
 
+When the server starts, leave the session as is and open browser to view the example blog of http://localhost:8000/post/2025/4/22/using-florence2-model-to-create-sslv-geometry-representation/
 ## License
 
 MIT License

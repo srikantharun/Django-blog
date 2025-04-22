@@ -1,0 +1,34 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h5>Django Blog</h5>
+            <p class="text-muted">A feature-rich blog application built with Django</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+            <ul class="list-inline mb-0">
+                <li class="list-inline-item">
+                    <a href="{% url 'blog:post_list' %}" class="text-decoration-none">
+                        <i class="fas fa-home me-1"></i>Home
+                    </a>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="list-inline-item">
+                    <a href="{% url 'profile' %}" class="text-decoration-none">
+                        <i class="fas fa-user-circle me-1"></i>Profile
+                    </a>
+                </li>
+                {% else %}
+                <li class="list-inline-item">
+                    <a href="{% url 'login' %}" class="text-decoration-none">
+                        <i class="fas fa-sign-in-alt me-1"></i>Login
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+            <p class="mt-2 mb-0 text-muted">
+                &copy; {% now "Y" %} Django Blog. All rights reserved.
+            </p>
+        </div>
+    </div>
+</div>
+EOF < /dev/null

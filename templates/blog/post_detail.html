@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}{{ object.title }} - Django Blog{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Post Content -->
+        <article>
+            <h1 class="mt-4">{{ object.title }}</h1>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="text-muted">
+                    <i class="far fa-user me-1"></i> 
+                    <a href="{% url "blog:user_posts" object.author.username %}" class="text-decoration-none">
+                        {{ object.author.username }}
+                    </a>
+                    <span class="mx-2">|</span>
+                    <i class="far fa-calendar me-1"></i> {{ object.publish|date:"F d, Y" }}
+                </div>
+                {% if object.author == user %}
+                    <div>
+                        <a href="{% url "blog:post_update" object.publish.year object.publish.month object.publish.day object.slug %}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-edit me-1"></i> Edit
+                        </a>
+                        <a href="{% url "blog:post_delete" object.publish.year object.publish.month object.publish.day object.slug %}" class="btn btn-sm btn-outline-danger delete-confirm">
+                            <i class="fas fa-trash me-1"></i> Delete
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="mb-3">
+                {% for category in object.categories.all %}
+                    <a href="{% url "blog:category_posts" category.slug %}" class="category-tag">
+                        {{ category.name }}
+                    </a>
+                {% endfor %}
+            </div>
+            
+            {% if object.featured_image %}
+                <img class="img-fluid rounded mb-4" src="{{ object.featured_image.url }}" alt="{{ object.title }}">
+            {% endif %}
+            
+            <div class="post-body mb-4">
+                {{ object.body|linebreaks }}
+            </div>
+        </article>
+        
+        <!-- Comments Section -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Comments ({{ comments.count }})</h5>
+            </div>
+            <div class="card-body">
+                {% if user.is_authenticated %}
+                    <div class="mb-4">
+                        <h5>Leave a Comment</h5>
+                        <form method="POST" action="{% url "blog:add_comment" object.publish.year object.publish.month object.publish.day object.slug %}">
+                            {% csrf_token %}
+                            {{ comment_form.body }}
+                            <button type="submit" class="btn btn-primary mt-3">Submit Comment</button>
+                        </form>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info mb-4">
+                        Please <a href="{% url "login" %}?next={{ request.path }}">login</a> to leave a comment.
+                    </div>
+                {% endif %}
+                
+                {% if comments %}
+                    <div class="comments-container">
+                        {% for comment in comments %}
+                            <div class="comment mb-3">
+                                <div class="comment-header">
+                                    <div class="comment-author">
+                                        <i class="far fa-user me-1"></i> {{ comment.author.username }}
+                                    </div>
+                                    <div class="comment-date">
+                                        <i class="far fa-clock me-1"></i> {{ comment.created|date:"F d, Y H:i" }}
+                                        
+                                        {% if comment.author == user %}
+                                            <a href="{% url "blog:delete_comment" comment.id %}" class="ms-2 text-danger delete-confirm" title="Delete comment">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="comment-content">
+                                    {{ comment.body|linebreaks }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <p class="text-muted mb-0">No comments yet. Be the first to comment!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">About the Author</h5>
+            </div>
+            <div class="card-body text-center">
+                <img class="rounded-circle mb-3" src="{{ object.author.profile.avatar.url }}" alt="{{ object.author.username }}" style="width: 100px; height: 100px; object-fit: cover;">
+                <h5>{{ object.author.username }}</h5>
+                <p class="text-muted mb-2">
+                    {% if object.author.profile.bio %}
+                        {{ object.author.profile.bio|truncatechars:100 }}
+                    {% else %}
+                        No bio available.
+                    {% endif %}
+                </p>
+                <a href="{% url "blog:user_posts" object.author.username %}" class="btn btn-outline-primary btn-sm">
+                    View All Posts by {{ object.author.username }}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

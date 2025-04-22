@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load markdown_extras %}
 
 {% block title %}{{ object.title }} - Django Blog{% endblock %}
 
@@ -42,7 +43,7 @@
             {% endif %}
             
             <div class="post-body mb-4">
-                {{ object.body|linebreaks }}
+                {{ object.body|markdown }}
             </div>
         </article>
         

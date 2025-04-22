@@ -26,18 +26,6 @@ check_command() {
 print_header "Django Blog Setup Script"
 echo "This script will set up your Django blog application"
 
-# Check if virtual environment exists
-if [ ! -d "venv" ]; then
-    print_header "Creating virtual environment"
-    python3 -m venv venv
-    check_command "Virtual environment created"
-fi
-
-# Activate virtual environment
-print_header "Activating virtual environment"
-source djanjo-blog/bin/activate
-check_command "Virtual environment activated"
-
 # Install dependencies
 print_header "Installing dependencies"
 pip install -r requirements.txt

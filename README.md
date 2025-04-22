@@ -63,10 +63,10 @@ A feature-rich blog application built with Django, featuring user authentication
 
 ## Development
 
-Use the `initialize.sh` script to set up templates and static files:
+Use the `setup.sh` script to set up templates and static files:
 
 ```
-./initialize.sh
+./setup.sh
 ```
 
 ## License
